@@ -1,12 +1,6 @@
 /**
  * Created by yys-tt on 2017/9/3.
  */
-var group_transform = {
-    1 : "大一",
-    2 : "大二",
-    3 : "大三",
-    4 : "大四"
-};
 
 $(document).ready(function(){
     //登录验证
@@ -29,26 +23,17 @@ function login_check() {
 
 //渲染数据
 function data_show() {
-    // 从cookie拿数据
-    var username = $.cookie('username');
-    var password = $.cookie('password');
-    var obj = {
-        email : username,
-        password : password
-    };
     //AJAX
     $.ajax({
-        type:"post",
-        url: "https://www.jnugeek.cn/api/checkApply ",
-        data: obj,
-        dataTpye: "json",
+        type:"get",
+        url: "/singleday/api",
         success: function(result,status,xhr) {
-            result = JSON.stringify(result);
             var data = result;
             if (!data) {
                 return;
             }
             data = JSON.parse(data);
+            console.log(data);
             // var data = [
             //     {
             //         created_at: "2017-09-01 14:13:43",
@@ -77,15 +62,12 @@ function data_show() {
             var all_html = "";
             for (var i=0;i<data.length;i++) {
                 var html = "";
-                html += "<td>" + data[i]["name"] +  "</td>";
-                html += "<td>" + data[i]["email"] +  "</td>";
-                html += "<td>" + data[i]["phone"] +  "</td>";
-                html += "<td>" + data[i]["student_id"] +  "</td>";
-                html += "<td>" + group_transform[data[i]["grade"]] +  "</td>";
-                html += "<td>" + data[i]["department"] +  "</td>";
-                html += "<td>" + data[i]["major"] +  "</td>";
-                html += "<td>" + data[i]["created_at"] +  "</td>";
-                html += "<td>" + data[i]["introduction"] +  "</td>";
+                html += "<td>" + data[i]["time"] +  "</td>";
+                html += "<td>" + data[i]["gender"] +  "</td>";
+                html += "<td>" + data[i]["question"] +  "</td>";
+                html += "<td>" + data[i]["answer"] +  "</td>";
+                html += "<td>" + data[i]["options"] +  "</td>";
+                html += "<td>" + data[i]["wechat"] +  "</td>";
                 html = "<tr>" + html + "<tr/>";
                 all_html += html;
             }

@@ -117,7 +117,6 @@ def singleDayApiGet():
 			data.append(b)
 		# after for circle
 		data = json.dumps(data)
-		print (data)
 		
 	except:
 		print('error in singleDayApiGet Function')
@@ -126,6 +125,24 @@ def singleDayApiGet():
 	db.close()
 	return data
 	
-
+# this API is for message-checking
+# when it is matched , it will return a boolen true
+@app.route('/logincheck/api',methods=['POST'])
+def loginCheck():
+	# get json data
+	username = urllib.parse.unquote(request.form['username'])
+	password = urllib.parse.unquote(request.form['password'])
+	# define your right message
+	right_username = "shiting@jnu.com"
+	right_password = "abc123"
+	result = ""
+	
+	if username==right_username and password==right_password:
+		result = "true"
+	else:
+		result = 'false'
+		
+	return result
+	
 if __name__ == '__main__':
     app.run()

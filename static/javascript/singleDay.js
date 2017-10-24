@@ -115,6 +115,7 @@ function initSubmit() {
                 // 提交成功
                 openModal("提交成功","上天之doge，祝福着你<br/><br/>页面将于三秒后刷新");
                 setTimeout(function(){location.reload()},3000);
+                return;
             } else if (xhr.responseText && xhr.responseText == "fail"){
                 // 提交失败，但是有返回
                 openModal("database出错了","请稍后再试");

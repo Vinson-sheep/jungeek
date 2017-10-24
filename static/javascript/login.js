@@ -41,34 +41,43 @@ function login() {
             return;
         }
         //数据整理
-        var obj = {
-            email : username,
-            password : password
-        };
-        // ajax提交
-        $.ajax({
-            type:"post",
-            url: "https://www.jnugeek.cn/api/checkApply ",
-            data: obj,
-            dataTpye: "json",
-            success: function(result,status,xhr) {
+        var data = "username=" + username + "&password=" + password;
+        var url = "/logincheck/api";
+        console.log(data);
+        // ajax模拟
+        // 新建xhr对象
+        var xhr = new XMLHttpRequest();
+        // xhr操作
+        xhr.open("post", url, false); //同步提交为false，异步可以用true
+        xhr.setRequestHeader("Content-Type","application/x-www-form-urlencoded");//需要修改header
+        xhr.send(data);//传输数据
+        // 检验提交情况
+        if ((xhr.status >= 200 && xhr.status <300) || xhr.status == 304) {
+            if (xhr.responseText && xhr.responseText == "true") {
+                // 提交成功
                 $.cookie('username',username,{path: '/'});
                 $.cookie('password',password,{path: '/'});
                 $.cookie('login_status',"on",{path: '/'});
                 // 页面跳转
                 window.location.href = "/data_show";
-            },
-            error: function(xhr,status,error) {
-                if (error == "INTERNAL SERVER ERROR") {
-                    alert_something("登录失败","用户名或密码不正确");
-                    $("#container input[type='submit']").attr("disabled",false);
-                    return;
-                } else {
-                    alert_something("登录失败","请检查你的网络。");
-                    $("#container input[type='submit']").attr("disabled",false);
-                    return;
-                }
+            } else if (xhr.responseText && xhr.responseText == "false"){
+                // 提交失败，但是有返回
+                alert_something("登录失败","用户名或密码不正确");
+                $("#container input[type='submit']").attr("disabled",false);
+                return;
+            } else {
+                // 提交失败，可能有返回，但是非true和false
+                alert_something("出错了","来自服务器的嘲讽");
+                $("#container input[type='submit']").attr("disabled",false);
+                return;
             }
-        });
+        } else {
+            // 提交失败
+            // 直接是赤字，大多是网络错误
+            alert_something("登录失败","请检查你的网络。");
+            $("#container input[type='submit']").attr("disabled",false);
+            return;
+        }
+
     })
 }
