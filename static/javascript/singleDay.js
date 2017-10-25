@@ -2,11 +2,19 @@
  * Created by yys-tt on 2017/10/22.
  */
 window.onload = function() {
+    // 定义全局global
+    // 方便多个函数引用
+    var global = {
+      circle : null
+    };
     // close-btn
     closeModal();
     // 初始化提交按钮
     initSubmit();
-
+    // 循环检查是否超过了ddl
+    // 如果超过了ddl
+    // 函数会禁用掉submit按钮
+    circleCheck(global);
 };
 
 // 模态框close按钮
@@ -131,4 +139,43 @@ function initSubmit() {
         //  解锁按钮
         subBtn.disabled = false;
     };
+}
+
+//
+function closeForm() {
+    var subBtn = document.getElementById("submit");
+    // 禁用按钮
+    subBtn.disabled = true;
+    // 修改文字
+    subBtn.innerText = "截至于2017-10-26 23:59";
+    // 修改样式
+    subBtn.style.backgroundColor = "grey";
+    subBtn.style.color = "white";
+}
+
+
+
+// 这个函数负责循环
+function circleCheck(){
+    // 闭包定义一个函数
+    // checkTime负责检查时间
+    // 如果时间到了周四深夜12点，则不能提交表单
+    // 这里的函数会被循环
+    var checkTime = function() {
+        // 获取当前时间
+        var now_time_str = (new Date()).valueOf();
+        // 获取提交按钮
+        var deadline = (new Date(2017,9,26,23,59,59)).valueOf();
+        // 比较
+        if (now_time_str >= deadline) {
+            closeForm();
+            // 关闭循环
+            clearInterval(circle);
+        }
+    };
+    // 先执行一次
+    checkTime();
+    // setInterval是过一段时间才执行第一次
+    // 所以需要先执行一次
+    var circle = setInterval(checkTime,2000);
 }
